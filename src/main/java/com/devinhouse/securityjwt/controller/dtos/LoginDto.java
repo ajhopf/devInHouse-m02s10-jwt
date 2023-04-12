@@ -11,8 +11,11 @@ import javax.validation.constraints.NotBlank;
 @Setter
 @AllArgsConstructor
 public class LoginDto {
-    @NotBlank private String username;
-    @NotBlank private String password;
+    @NotBlank
+    private String username;
+    @NotBlank
+    private String password;
+    private Boolean ativo;
 
     public UsernamePasswordAuthenticationToken converter() {
         return new UsernamePasswordAuthenticationToken(username, password);

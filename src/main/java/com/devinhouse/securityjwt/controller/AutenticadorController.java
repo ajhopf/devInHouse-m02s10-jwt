@@ -12,6 +12,7 @@ import org.springframework.security.authentication.AuthenticationManager;
 import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.AuthenticationException;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
@@ -28,17 +29,20 @@ public class AutenticadorController {
     private final AuthenticationManager authenticationManager;
     private final UsuarioRepository usuarioRepository;
     private final PerfilRepository perfilRepository;
-    private final TokenService tokenService;
+    private final TokenService tokenService; //cuidar para importar o correto (o meu tokenService), nao a interface
+    private final PasswordEncoder encoder;
 
     public AutenticadorController(
-            AuthenticationManager authenticationManager,
+            AuthenticationManager authenticationManager,//está vindo do WebSecurityConfiguration
             TokenService tokenService,
             UsuarioRepository usuarioRepository,
-            PerfilRepository perfilRepository) {
+            PerfilRepository perfilRepository,
+            PasswordEncoder encoder) {
         this.authenticationManager = authenticationManager;
         this.tokenService = tokenService;
         this.usuarioRepository = usuarioRepository;
         this.perfilRepository = perfilRepository;
+        this.encoder = encoder;
     }
 
     @PostMapping
@@ -60,10 +64,12 @@ public class AutenticadorController {
 
         Usuario usuario = Usuario.builder()
                 .username(usuarioDto.getUsername())
-                .password(usuarioDto.getPassword())
+                .password(encoder.encode(usuarioDto.getPassword()))
+                .ativo(usuarioDto.getAtivo())
                 .perfis(List.of(usuarioDto.getPerfil()))
                 .build();
         usuarioRepository.save(usuario);
-        return ResponseEntity.created(URI.create("/auth/cadastro")).build();
+
+        return ResponseEntity.created(URI.create("/auth/cadastrar")).build();
     }
 }

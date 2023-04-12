@@ -23,6 +23,7 @@ public class Usuario implements UserDetails {
     private String username;
     private String password;
     private String name;
+    private Boolean ativo;
 
     //fetchtype Eager -> ao iniciar o programa irá fazer a procura de todos perfis
     @ManyToMany(fetch = FetchType.EAGER)

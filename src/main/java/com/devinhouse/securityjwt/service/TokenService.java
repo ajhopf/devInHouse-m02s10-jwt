@@ -14,10 +14,10 @@ import java.util.Date;
 //Valores para gerar o token e validar se o token é correto
 @Service
 public class  TokenService {
-    @Value("${security.jwt.expiration}")
+    @Value("${security.jwt.expiration}")//traz valor do application.properties
     private Long tempoExpiracao;
 
-    @Value("${security.jwt.secret}")
+    @Value("${security.jwt.secret}")//traz valor do application.properties
     private String secret;
 
     public String gerarToken(Authentication authentication) {
@@ -27,7 +27,7 @@ public class  TokenService {
 
         expiracao.setTime(hoje.getTime() + tempoExpiracao);
 
-        return Jwts.builder()
+        return Jwts.builder()//jwt depende da dependencia jjwt
                 .setIssuer("Security JWT")
                 .setSubject(String.valueOf(user.getId()))
                 .setIssuedAt(hoje)
@@ -40,8 +40,7 @@ public class  TokenService {
         try {
             Jwts.parser().setSigningKey(this.secret).parseClaimsJws(token);
             return true;
-        }
-        catch (Exception e){
+        } catch (Exception e) {
             return false;
         }
     }

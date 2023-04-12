@@ -9,5 +9,5 @@ import lombok.Setter;
 @AllArgsConstructor
 public class TokenDto {
     private String token;
-    private String tipo;
+    private String tipo; //bearer
 }
